@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProjectGuid>{8E5A5DC1-CCF7-4401-AFFF-47C7BC7EB1D4}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>FeynmanDiagram</RootNamespace>
+    <AssemblyName>FeynmanDiagram</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug</OutputPath>
+    <DefineConstants>DEBUG;</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ExternalConsole>true</ExternalConsole>
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ExternalConsole>true</ExternalConsole>
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="GRaff">
+      <HintPath>..\..\G-Raff\GRaff\bin\Debug\GRaff.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ValueTuple">
+      <HintPath>..\packages\System.ValueTuple.4.3.1\lib\netstandard1.0\System.ValueTuple.dll</HintPath>
+    </Reference>
+    <Reference Include="GRaff.Extensions">
+      <HintPath>..\..\G-Raff\GRaff.Extensions\bin\Debug\GRaff.Extensions.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Edge.cs" />
+    <Compile Include="EdgeType.cs" />
+    <Compile Include="Toolbar.cs" />
+    <Compile Include="Tools\Tool.cs" />
+    <Compile Include="Tools\PointerTool.cs" />
+    <Compile Include="DiagramContainerElement.cs" />
+    <Compile Include="UndoStack.cs" />
+    <Compile Include="Tutorial\Tutorial01.cs" />
+    <Compile Include="Assets.cs" />
+    <Compile Include="Vertex.cs" />
+    <Compile Include="Tools\EdgeCreationTool.cs" />
+    <Compile Include="Tools\DeleteTool.cs" />
+    <Compile Include="Tutorial\Tutorial02.cs" />
+    <Compile Include="Tools\VertexCreationTool.cs" />
+    <Compile Include="DiagramContainerNode.cs" />
+    <Compile Include="Analysis\Diagram.cs" />
+    <Compile Include="Analysis\VertexData.cs" />
+    <Compile Include="Analysis\EdgeData.cs" />
+    <Compile Include="ParticleType.cs" />
+    <Compile Include="PuzzleRoom.cs" />
+    <Compile Include="Tutorial\TutorialRoom.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+    <None Include="Assets\StraightEdge.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Assets\SineEdge.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Assets\FermionArrowhead.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Assets\GluonEdge.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Tools\" />
+    <Folder Include="Tutorial\" />
+    <Folder Include="Analysis\" />
+    <Folder Include="Assets\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+</Project>
