@@ -22,6 +22,8 @@ namespace FeynmanDiagram
        // public static Texture StraightEdgeTexture { get; private set; }
         public static Sprite FermionArrowheadSprite { get; private set; }
 
+        public static Sprite ToolBackgroundSprite { get; private set; }
+
         public static Dictionary<ParticleClass, Sprite> EdgeSprites { get; private set; }
 
 
@@ -35,6 +37,8 @@ namespace FeynmanDiagram
             TutorialTextRenderer = new TextRenderer(ToolbarFont, FontAlignment.TopLeft, 900);
 
             FermionArrowheadSprite = Sprite.Load("Assets/FermionArrowhead.png");
+
+            ToolBackgroundSprite = Sprite.Load("Assets/ToolBackground.png", imageCount: 3, origin: (0, 0));
 
             int w = 155, h = 25;
             var sineData = new Color[h + 1, w];
@@ -50,9 +54,9 @@ namespace FeynmanDiagram
             {
                 { ParticleClass.Quark, fermionSprite },
                 { ParticleClass.Lepton, fermionSprite },
-                { ParticleClass.ZPhoton, new Sprite(texture.SubTexture) },
+                { ParticleClass.ZPhoton, new Sprite(texture.SubTexture()) },
                 { ParticleClass.Gluon, Sprite.Load("Assets/GluonEdge.png") },
-                { ParticleClass.WBoson, new Sprite(texture.SubTexture) },
+                { ParticleClass.WBoson, new Sprite(texture.SubTexture()) },
             };
         }
 
