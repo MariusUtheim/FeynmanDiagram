@@ -28,9 +28,9 @@ namespace FeynmanDiagram
         public static void LoadAll()
         {
             ToolbarFont = Font.LoadTrueType("Arial", 12, Font.ASCIICharacters, FontOptions.None);
-            EdgeLabelFont = Font.LoadTrueType("Luminari", 18, ParticleSymbols, FontOptions.None);
-            VertexLabelFont = Font.LoadTrueType("Luminari", 32, ParticleSymbols, FontOptions.None);
-            TaskFont = Font.LoadTrueType("Luminari", 36, ParticleSymbols, FontOptions.None);
+            EdgeLabelFont = Font.LoadTrueTypeFromFile("Assets/cambriai.ttf", 18, ParticleSymbols);
+            VertexLabelFont = Font.LoadTrueTypeFromFile("Assets/cambriai.ttf", 32, ParticleSymbols);
+            TaskFont = Font.LoadTrueTypeFromFile("Assets/cambriai.ttf", 36, ParticleSymbols);
 
             TutorialTextRenderer = new TextRenderer(ToolbarFont, FontAlignment.TopLeft, 900);
 
@@ -50,9 +50,9 @@ namespace FeynmanDiagram
             {
                 { ParticleClass.Quark, fermionSprite },
                 { ParticleClass.Lepton, fermionSprite },
-                { ParticleClass.ZPhoton, new Sprite(texture.SubTexture) },
+                { ParticleClass.ZPhoton, new Sprite(texture.SubTexture()) },
                 { ParticleClass.Gluon, Sprite.Load("Assets/GluonEdge.png") },
-                { ParticleClass.WBoson, new Sprite(texture.SubTexture) },
+                { ParticleClass.WBoson, new Sprite(texture.SubTexture()) },
             };
         }
 

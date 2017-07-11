@@ -91,11 +91,15 @@ namespace FeynmanDiagram
                 color = Colors.Black;
             Draw.FillCircle(Center, Radius, color, color.Transparent(0));
 
-            if (IsInput)
-                Draw.Text(GetEndpointType().Symbol, Assets.VertexLabelFont, FontAlignment.Right, (Center.X - 1.5 * Radius, Center.Y));
-            else if (IsOutput)
-                Draw.Text(GetEndpointType().Symbol, Assets.VertexLabelFont, FontAlignment.Left, (Center.X + 1.5 * Radius, Center.Y));
-            //Draw.Text(_edges.Count.ToString(), Assets.Arial, Center, Colors.White);
+
+            if (IsLeaf)
+            {
+                var textColor = GetEndpointType().ColorCharge.GetColor();
+                if (IsInput)
+                    Draw.Text(GetEndpointType().Symbol, Assets.VertexLabelFont, FontAlignment.Right, (Center.X - 1.5 * Radius, Center.Y), textColor);
+                else if (IsOutput)
+                    Draw.Text(GetEndpointType().Symbol, Assets.VertexLabelFont, FontAlignment.Left, (Center.X + 1.5 * Radius, Center.Y), textColor);
+            }
         }
 
 		public override void OnParentChanging(Node parent)

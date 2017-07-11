@@ -155,6 +155,9 @@ namespace FeynmanDiagram
                 case ColorCharge.R: return Color.Rgb(255, 0, 0);
                 case ColorCharge.G: return Color.Rgb(0, 255, 0);
                 case ColorCharge.B: return Color.Rgb(0, 0, 255);
+                case ColorCharge.r: return Color.Rgb(0, 255, 255);
+                case ColorCharge.g: return Color.Rgb(255, 0, 255);
+                case ColorCharge.b: return Color.Rgb(255, 255, 0);
                 default: return Color.Rgb(0, 0, 0);
             }
         }
