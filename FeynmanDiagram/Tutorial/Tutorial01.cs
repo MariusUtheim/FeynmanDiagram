@@ -12,7 +12,7 @@
 //		private DiagramContainerElement _region;
 
 //        public Tutorial01()
-//            : base(1024, 768)
+//            : base(Program.WindowWidth, Program.WindowHeight)
 //        {
 //            GlobalEvent.KeyPressed += key =>
 //            {

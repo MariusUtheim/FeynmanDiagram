@@ -5,11 +5,14 @@ using GRaff;
 
 namespace FeynmanDiagram
 {
-    class MainClass
+    class Program
     {
+        public static int WindowWidth = 1920;
+        public static int WindowHeight = 1280;
+
         public static void Main(string[] args)
         {
-            Giraffe.Run(1024, 768, gameStart);
+            Giraffe.Run(WindowWidth, WindowHeight, gameStart);
         }
 
         public static void gameStart()

@@ -21,7 +21,7 @@ namespace FeynmanDiagram
         private Color _color = Colors.AliceBlue;
 
         private PuzzleRoom(string name, int minOrder, IEnumerable<ParticleType> input, IEnumerable<ParticleType> output)
-            : base(1024, 768)
+            : base(Program.WindowWidth, Program.WindowHeight)
         {
             _name = name;
             _minOrder = minOrder;
@@ -31,16 +31,19 @@ namespace FeynmanDiagram
             _output = output.OrderBy(p => p).ToList();
         }
 
-        public PuzzleRoom(string name, int minOrder, IEnumerable<ParticleType> input, IEnumerable<ParticleType> output, params Tool[] availableTools)
+        public PuzzleRoom(string name, int minOrder, IEnumerable<ParticleType> input, IEnumerable<ParticleType> output, Tool[][] availableTools)
             : this(name, minOrder, input, output)
         {
-            _toolbar = new Toolbar(availableTools);
-		}
+            var w = availableTools.Length;
+            var h = 0;
+            for (var i = 0; i < w; i++)
+                h = GMath.Max(h, availableTools[i].Length);
+            var tools = new Tool[w, h];
+            for (var x = 0; x < availableTools.Length; x++)
+                for (var y = 0; y < availableTools[x].Length; y++)
+                    tools[x, y] = availableTools[x][y];
 
-        public PuzzleRoom(string name, int minOrder, IEnumerable<ParticleType> input, IEnumerable<ParticleType> output, Tool[,] availableTools)
-            : this(name, minOrder, input, output)
-        {
-            _toolbar = new Toolbar(availableTools);
+            _toolbar = new Toolbar(tools);
         }
 
         public sealed override void OnEnter()
@@ -89,122 +92,190 @@ namespace FeynmanDiagram
         }
 
         private static int _puzzleIndex = 0;
+        private static Tool[] basicTools = new[] { Tool.Pointer, Tool.Vertex, Tool.Delete };
+
         public static PuzzleRoom[] Puzzles = new[] {
 
 
 
             // Electrons
-            new PuzzleRoom("Two ways", 2,
+            new PuzzleRoom("Electron-positron scattering", 2,
                            new[] { ParticleType.Electron, ParticleType.AntiElectron },
                            new[] { ParticleType.Electron, ParticleType.AntiElectron },
-                           new Tool[,] {
-                               { Tool.Pointer, Tool.Vertex, Tool.Delete },
-                               { Tool.Electron, null, null },
-                               { Tool.Photon, null, null }
+                           new Tool[][] {
+                               basicTools,
+                               new[] { Tool.Electron },
+                               new[] { Tool.Photon }
                            }),
 
             new PuzzleRoom("Electron in a field", 2,
                            new[] { ParticleType.Electron, ParticleType.Photon },
                            new[] { ParticleType.Electron, ParticleType.Photon },
-                           Tool.Pointer, Tool.Vertex, Tool.Delete, Tool.Electron, Tool.Photon),
+                           new[] { basicTools, new[] { Tool.Electron }, new[] { Tool.Photon }}),
 
             new PuzzleRoom("Electron-Positron annihilation", 2,
                            new[] { ParticleType.Electron, ParticleType.AntiElectron },
                            new[] { ParticleType.Photon, ParticleType.Photon },
-                           Tool.Pointer, Tool.Vertex, Tool.Delete, Tool.Electron, Tool.Photon),
+                           new[] { basicTools, new[] { Tool.Electron }, new[] { Tool.Photon }}),
 
 
             // Muons
             new PuzzleRoom("Muon pair production", 2,
                            new[] { ParticleType.Electron, ParticleType.AntiElectron },
                            new[] { ParticleType.Muon, ParticleType.AntiMuon },
-                           Tool.Pointer, Tool.Vertex, Tool.Delete, Tool.Electron, Tool.Muon, Tool.Photon),
+                           new[] { basicTools, new[] { Tool.Electron, Tool.Muon }, new[] { Tool.Photon }}),
 
-			new PuzzleRoom("Photon-Photon scattering", 4,
-						   new[] { ParticleType.Photon, ParticleType.Photon },
-						   new[] { ParticleType.Photon, ParticleType.Photon },
-						   Tool.Pointer, Tool.Vertex, Tool.Delete, Tool.Electron, Tool.Muon, Tool.Photon),
+            new PuzzleRoom("Photon-Photon scattering", 4,
+                           new[] { ParticleType.Photon, ParticleType.Photon },
+                           new[] { ParticleType.Photon, ParticleType.Photon },
+                           new[] { basicTools, new[] { Tool.Electron, Tool.Muon }, new[] { Tool.Photon }}),
 
-			new PuzzleRoom("Electron-Positron pair production", 3,
+            new PuzzleRoom("Electron-Positron pair production", 3,
                            new[] { ParticleType.Muon, ParticleType.Photon },
                            new[] { ParticleType.Muon, ParticleType.Electron, ParticleType.AntiElectron },
-                           Tool.Pointer, Tool.Vertex, Tool.Delete, Tool.Electron, Tool.Muon, Tool.Photon),
+                           new[] { basicTools, new[] { Tool.Electron, Tool.Muon }, new[] { Tool.Photon }}),
 
 
             // Exotic diagrams
             new PuzzleRoom("Vacuum fluctuations", 2,
                            new ParticleType[0],
                            new ParticleType[0],
-                           Tool.Pointer, Tool.Vertex, Tool.Delete, Tool.Electron, Tool.Muon, Tool.Photon),
+                           new[] { basicTools, new[] { Tool.Electron, Tool.Muon }, new[] { Tool.Photon }}),
 
             new PuzzleRoom("Tadpole", 1,
                            new[] { ParticleType.Photon },
                            new ParticleType[0],
-                           Tool.Pointer, Tool.Vertex, Tool.Delete, Tool.Electron, Tool.Muon, Tool.Photon),
+                           new[] { basicTools, new[] { Tool.Electron, Tool.Muon }, new[] { Tool.Photon }}),
 
 
             // Quarks
             new PuzzleRoom("Quark annihilation", 0,
                            new[] { ParticleType.UpR, ParticleType.AntiUpR },
                            new[] { ParticleType.DownB, ParticleType.AntiDownB },
-                           Tool.Pointer, Tool.Vertex, Tool.Delete, Tool.Up(R), Tool.Down(B), Tool.Photon),
+                           new[] { basicTools, new[] { Tool.Up(R) }, new[] { Tool.Down(B) }, new[] { Tool.Photon } }),
 
             // Gluons
             new PuzzleRoom("Gluons", 0,
                            new[] { ParticleType.UpR, ParticleType.AntiUpB },
                            new[] { ParticleType.DownR, ParticleType.AntiDownB },
-                           new Tool[,] {
-                { Tool.Pointer, Tool.Vertex, Tool.Delete },
-                { Tool.Up(R), Tool.Up(B), null },
-                { Tool.Down(R), Tool.Down(B), null },
-                { Tool.Photon, Tool.Gluon, null }
-            }),
+                           new Tool[][] {
+                                basicTools,
+                                new[] { Tool.Up(R), Tool.Up(B) },
+                                new[] { Tool.Down(R), Tool.Down(B) },
+                                new[] { Tool.Photon, Tool.Gluon }
+                           }),
 
-
-            new PuzzleRoom("Down quark decay", 0,
+            new PuzzleRoom("Gluon emission", 0,
                            new[] { ParticleType.DownR },
                            new[] { ParticleType.DownB, ParticleType.UpR, ParticleType.AntiUpB },
-                           Tool.Pointer, Tool.Vertex, Tool.Delete,
-                           Tool.Up(R), Tool.Up(B), Tool.Down(R), Tool.Down(B), Tool.Photon, Tool.Gluon),
+                           new Tool[][] {
+                               basicTools,
+                               new[] { Tool.Up(R), Tool.Up(G), Tool.Up(B) },
+                               new[] { Tool.Down(R), Tool.Down(G), Tool.Down(B) },
+                               new[] { Tool.Photon, Tool.Gluon }
+                           }),
+
+            new PuzzleRoom("Color conservation", 0,
+                           new[] { ParticleType.DownG },
+                           new[] { ParticleType.DownG, ParticleType.UpG, ParticleType.AntiUpG },
+                           new Tool[][] {
+                               basicTools,
+                               new[] { Tool.Up(R), Tool.Up(G), Tool.Up(B) },
+                               new[] { Tool.Down(R), Tool.Down(G), Tool.Down(B) },
+                               new[] { Tool.Photon, Tool.Gluon }
+                           }),
 
             new PuzzleRoom("Neutral pion generation", 2,
                            new[] { ParticleType.Electron, ParticleType.AntiElectron },
                            new[] { ParticleType.UpR, ParticleType.AntiUpR, ParticleType.DownB, ParticleType.AntiDownB },
-                           Tool.Pointer, Tool.Vertex, Tool.Delete, Tool.Electron, Tool.ENeutrino,
-                           Tool.Up(R), Tool.Down(B), Tool.Photon, Tool.Gluon),
+                           new Tool[][] {
+                               basicTools,
+                               new[] { Tool.Up(R), Tool.Up(G), Tool.Up(B) },
+                               new[] { Tool.Down(R), Tool.Down(G), Tool.Down(B) },
+                               new[] { Tool.Photon, Tool.Gluon }
+                           }),
 
             new PuzzleRoom("Charged pion generation", 0,
                            new[] { ParticleType.Electron, ParticleType.AntiElectron },
                            new[] { ParticleType.UpR, ParticleType.AntiDownR, ParticleType.DownB, ParticleType.AntiUpB },
-                           Tool.Pointer, Tool.Vertex, Tool.Delete, Tool.Electron, Tool.ENeutrino,
-                           Tool.Up(R), Tool.Up(B), Tool.Down(B), Tool.Down(B),
-                           Tool.Photon, Tool.Gluon),
+                           new Tool[][] {
+                               basicTools,
+                               new[] { Tool.Up(R), Tool.Up(G), Tool.Up(B) },
+                               new[] { Tool.Down(R), Tool.Down(G), Tool.Down(B) },
+                               new[] { Tool.Photon, Tool.Gluon }
+                           }),
 
             new PuzzleRoom("Gluon three-vertex", 0,
                            new[] { ParticleType.Gluon },
                            new[] { ParticleType.UpR, ParticleType.AntiUpG, ParticleType.DownG, ParticleType.AntiDownR },
-						   Tool.Pointer, Tool.Vertex, Tool.Delete, Tool.Electron, Tool.ENeutrino,
-						   Tool.Up(R), Tool.Up(B), Tool.Down(B), Tool.Down(B),
-						   Tool.Photon, Tool.Gluon),
+                           new Tool[][] {
+                               basicTools,
+                               new[] { Tool.Up(R), Tool.Up(G), Tool.Up(B) },
+                               new[] { Tool.Down(R), Tool.Down(G), Tool.Down(B) },
+                               new[] { Tool.Photon, Tool.Gluon }
+                           }),
 
 
             // Weak force
+            new PuzzleRoom("Weak Annihilation", 0,
+                           new[] { ParticleType.AntiElectron, ParticleType.ENeutrino},
+                           new[] { ParticleType.Muon, ParticleType.AntiMNeutrino },
+                           new Tool[][]
+                           {
+                               basicTools,
+                               new[] { Tool.Electron, Tool.Muon },
+                               new[] { Tool.ENeutrino, Tool.MNeutrino },
+                               new[] { Tool.WBoson }
+                           }),
+
+            new PuzzleRoom("Weak Scattering", 0,
+                           new[] { ParticleType.Muon, ParticleType.ENeutrino},
+                           new[] { ParticleType.Electron, ParticleType.MNeutrino },
+                           new Tool[][]
+                           {
+                               basicTools,
+                               new[] { Tool.Electron, Tool.Muon },
+                               new[] { Tool.ENeutrino, Tool.MNeutrino },
+                               new[] { Tool.WBoson }
+                           }),
+
             new PuzzleRoom("Neuton decay", 0,
                            new[] { ParticleType.DownR },
                            new[] { ParticleType.UpR, ParticleType.Electron, ParticleType.AntiENeutrino },
-                           Tool.Pointer, Tool.Vertex, Tool.Delete, Tool.Electron, Tool.ENeutrino, Tool.Up(ColorCharge.R), Tool.Down(ColorCharge.R), Tool.Photon, Tool.Gluon, Tool.WBoson),
+                           new Tool[][] {
+                               basicTools,
+                               new[] { Tool.Electron, Tool.Muon },
+                               new[] { Tool.ENeutrino, Tool.MNeutrino },
+                               new[] { Tool.Up(R), Tool.Up(G), Tool.Up(B) },
+                               new[] { Tool.Down(R), Tool.Down(G), Tool.Down(B) },
+                               new[] { Tool.Photon, Tool.Gluon, Tool.WBoson }
+                           }),
 
 
             new PuzzleRoom("Penguin diagram", 0,
                            new[] { ParticleType.ENeutrino },
                            new[] { ParticleType.ENeutrino, ParticleType.UpR, ParticleType.AntiUpR },
-                           Tool.Pointer, Tool.Vertex, Tool.Delete, Tool.Electron, Tool.ENeutrino, Tool.Up(ColorCharge.R), Tool.Photon, Tool.Gluon, Tool.WBoson),
+                           new Tool[][] {
+                               basicTools,
+                               new[] { Tool.Electron, Tool.Muon },
+                               new[] { Tool.ENeutrino, Tool.MNeutrino },
+                               new[] { Tool.Up(R), Tool.Up(G), Tool.Up(B) },
+                               new[] { Tool.Down(R), Tool.Down(G), Tool.Down(B) },
+                               new[] { Tool.Photon, Tool.Gluon, Tool.WBoson }
+                           }),
 
 
             new PuzzleRoom("Crossing", 0,
                            new[] { ParticleType.UpR, ParticleType.UpR },
                            new[] { ParticleType.TopR, ParticleType.TopR },
-                           Tool.Pointer, Tool.Vertex, Tool.Delete, Tool.Up(R), Tool.Down(R), Tool.Top(R), Tool.Bottom(R), Tool.Photon, Tool.Gluon, Tool.WBoson),
+                           new Tool[][] {
+                               basicTools,
+                               new[] { Tool.Electron, Tool.Muon },
+                               new[] { Tool.ENeutrino, Tool.MNeutrino },
+                               new[] { Tool.Up(R), Tool.Up(G), Tool.Up(B) },
+                               new[] { Tool.Down(R), Tool.Down(G), Tool.Down(B) },
+                               new[] { Tool.Photon, Tool.Gluon, Tool.WBoson }
+                           }),
 
 
 

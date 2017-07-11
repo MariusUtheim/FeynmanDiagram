@@ -6,7 +6,7 @@ namespace FeynmanDiagram.Tutorial
     public class TutorialRoom : Room
     {
         public TutorialRoom(string txt, params DiagramContainerElement[] figures)
-            : base(1024, 768) { }
+            : base(Program.WindowWidth, Program.WindowHeight) { }
 
 
         private static TutorialRoom Tutorial01()
