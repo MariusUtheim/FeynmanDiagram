@@ -41,11 +41,13 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ExitButton.cs" />
+    <Compile Include="Menus\MainMenu.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Edge.cs" />
     <Compile Include="EdgeType.cs" />
-    <Compile Include="Toolbar.cs" />
+    <Compile Include="Tools\Toolbar.cs" />
     <Compile Include="Tools\Tool.cs" />
     <Compile Include="Tools\PointerTool.cs" />
     <Compile Include="DiagramContainerElement.cs" />
@@ -93,6 +95,7 @@
     <Content Include="freetype6.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Tutorial.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

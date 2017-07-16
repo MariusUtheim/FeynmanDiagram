@@ -32,36 +32,6 @@ namespace FeynmanDiagram
             set => throw new NotSupportedException();
         }
 
-        public bool IsValid
-        {
-            get
-            {
-                switch (_edges.Count)
-                {
-                    case 0:
-                    case 1:
-                        return true;
-
-                    case 2:
-                        return (_edges[0].ConnectsTo(_edges[1]));
-
-                    case 3:
-                        if (_edges.All(e => e.EdgeType == ParticleClass.Gluon))
-                            return true;
-
-                        var force = _edges.FirstOrDefault(e => !e.EdgeType.IsFermion());
-                        var input = _edges.FirstOrDefault(e => e.EdgeType.IsFermion() && e.To == this);
-                        var output = _edges.FirstOrDefault(e => e.EdgeType.IsFermion() && e.From == this);
-                        return (force != null && input != null && output != null)
-                            && (input.ParticleType.CouplingStrength(output.ParticleType, force.ParticleType) > 0);
-                        
-
-                    default:
-                        return _edges.All(e => e.EdgeType == ParticleClass.Gluon);
-                }
-              
-            }
-        }
 
 		public void AddEdge(Edge edge)
 		{
@@ -89,7 +59,11 @@ namespace FeynmanDiagram
                 color = Colors.Red;
             else
                 color = Colors.Black;
-            Draw.FillCircle(Center, Radius, color, color.Transparent(0));
+
+            if ((ToParent((Point)Mouse.WindowLocation) - Center).Magnitude <= Radius)
+                Draw.FillCircle(Center, Radius, color, color.Transparent(0.1));
+            else
+                Draw.FillCircle(Center, Radius, color, color.Transparent(0));
 
 
             if (IsLeaf)
@@ -178,6 +152,10 @@ namespace FeynmanDiagram
             }
 		}
 
+
+
+        #region Diagram analysis
+        
         public bool IsLeaf => _edges.Count == 1;
         public bool IsInput => IsLeaf && _edges[0].OtherEnd(this).X >= this.X;
         public bool IsOutput => IsLeaf && _edges[0].OtherEnd(this).X < this.X;
@@ -206,5 +184,61 @@ namespace FeynmanDiagram
             else
                 return (input.ParticleType, output.ParticleType, force.ParticleType);
         }
-	}
+        
+        public bool IsValid
+        {
+            get
+            {
+                switch (_edges.Count)
+                {
+                    case 0:
+                    case 1:
+                        return true;
+
+                    case 2:
+                        return (_edges[0].ConnectsTo(_edges[1]));
+
+                    case 3:
+                        if (_edges.All(e => e.EdgeType == ParticleClass.Gluon))
+                            return true;
+                        if (_edges.Any(e => e.EdgeType == ParticleClass.Higgs))
+                        {
+                            var others = _edges.Where(e => e.EdgeType != ParticleClass.Higgs).ToArray();
+                            return others[0].ConnectsTo(others[1]) && others[0].ParticleType.CouplingStrength(others[1].ParticleType, ParticleType.Higgs) > 0;
+                        }
+
+                        var force = _edges.FirstOrDefault(e => !e.EdgeType.IsFermion());
+                        var input = _edges.FirstOrDefault(e => e.EdgeType.IsFermion() && e.To == this);
+                        var output = _edges.FirstOrDefault(e => e.EdgeType.IsFermion() && e.From == this);
+                        return (force != null && input != null && output != null)
+                            && (input.ParticleType.CouplingStrength(output.ParticleType, force.ParticleType) > 0);
+
+
+                    default:
+                        return _edges.All(e => e.EdgeType == ParticleClass.Gluon);
+                }
+
+            }
+        }
+
+        public double CouplingCost()
+        {
+            if (_edges.Count != 3)
+                return 0;
+
+            if (_edges.Any(e => e.EdgeType == ParticleClass.Higgs))
+            {
+                var others = _edges.Where(e => e.EdgeType != ParticleClass.Higgs).ToArray();
+                return others[0].ParticleType.CouplingStrength(others[1].ParticleType, ParticleType.Higgs);
+            }
+            else
+            {
+                var p = Decompose();
+                return p?.i.CouplingStrength(p?.o, p?.f) ?? 0;
+            }
+        }
+
+        #endregion
+
+    }
 }

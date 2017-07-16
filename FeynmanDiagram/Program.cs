@@ -7,8 +7,8 @@ namespace FeynmanDiagram
 {
     class Program
     {
-        public static int WindowWidth = 1920;
-        public static int WindowHeight = 1280;
+        public static int WindowWidth = 1280;
+        public static int WindowHeight = 800;
 
         public static void Main(string[] args)
         {
@@ -17,9 +17,8 @@ namespace FeynmanDiagram
 
         public static void gameStart()
         {
-            GlobalEvent.ExitOnEscape = true;
             Assets.LoadAll();
-
+            
             //Room.Goto(new Tutorial01());
 
             Room.Goto(PuzzleRoom.Puzzles[0]);
@@ -38,3 +37,4 @@ namespace FeynmanDiagram
         }
     }
 }
+ 

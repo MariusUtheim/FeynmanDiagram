@@ -25,6 +25,7 @@ namespace FeynmanDiagram
         public Toolbar(Tool[,] tools)
         {
             this._tools = tools;
+            //Location = (0, Room.Current.Height);
         }
 
         public static Toolbar Current => Instance<Toolbar>._;
@@ -58,7 +59,7 @@ namespace FeynmanDiagram
 
         public Point Location { get; }
 
-        public (int x, int y) MouseIndex => ((int)((Mouse.X - Location.X) / width), (int)((Mouse.Y - Location.Y) / height));
+        public (int x, int y) MouseIndex => ((int)((Mouse.Y - Location.Y) / height), (int)((Mouse.X - Location.X) / width));
 
         public override void OnDraw()
         {
@@ -70,7 +71,7 @@ namespace FeynmanDiagram
                 {
                     if (_tools[x, y] == null)
                         continue;
-                    var region = targetRegion + new Vector(width * x, height * y);
+                    var region = targetRegion + new Vector(width * y, height * x);
                     Draw.Sprite(Assets.ToolBackgroundSprite, (x, y).Equals(_activeTool) ? 2 : (x, y).Equals(idx) ? 1 : 0, region.TopLeft);  
                     Draw.Text(_tools[x, y].Text, Assets.ToolbarFont, FontAlignment.Center, region.Center, _tools[x, y].Color);
                     Draw.Text(_tools[x, y].Hotkey.ToString(), Assets.ToolbarFont, FontAlignment.BottomRight, region.BottomRight, Colors.Black);

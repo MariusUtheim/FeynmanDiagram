@@ -46,7 +46,7 @@ namespace FeynmanDiagram
         {
             var input = new List<ParticleType>();
             var output = new List<ParticleType>();
-            
+
             foreach (var vertex in Root.Children.OfType<Vertex>())
             {
                 if (vertex.IsInput)
@@ -75,6 +75,15 @@ namespace FeynmanDiagram
 
         public int GetOrder() => Root.Children.OfType<Vertex>().Where(v => v.IsValid && v.Edges.Count() >= 3).Count();
 
-        public bool IsValid => Root.Children.OfType<Vertex>().All(v => v.IsValid);
+        public bool IsValid
+        {
+            get
+            {
+#warning Also make sure it is connected
+                return Root.Children.OfType<Vertex>().All(v => v.IsValid);
+            }
+        }
+
+
     }
 }

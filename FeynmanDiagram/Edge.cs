@@ -86,11 +86,13 @@ namespace FeynmanDiagram
                 if (force == null)
                     return this.ParticleType.Name == next.ParticleType.Name || this.ParticleType.Complementary == next.ParticleType;
                 else if (force == ParticleType.Photon)
-                    return this.ParticleType.Name == next.ParticleType.Name && this.ParticleType.ColorCharge == next.ParticleType.ColorCharge;
+                    return this.ParticleType.Name == next.ParticleType.Name && this.ParticleType.ColorCharge == next.ParticleType.ColorCharge && this.ParticleType.Charge != 0;
                 else if (force == ParticleType.Gluon)
                     return this.ParticleType.Name == next.ParticleType.Name && this.ParticleType.ColorCharge != next.ParticleType.ColorCharge;
                 else if (force == ParticleType.WPlus || force == ParticleType.WMinus)
                     return this.ParticleType.Complementary == next.ParticleType;
+                else if (force == ParticleType.Higgs)
+                    return this.ParticleType.Name == next.ParticleType.Name;
                 else
                     throw new NotSupportedException();
             }
@@ -169,7 +171,7 @@ namespace FeynmanDiagram
                 {
                     var p = ins.Value.i.ColorCharge.GetColor();
                     var a = ins.Value.o.ColorCharge.GetColor();
-                    color = Color.Rgb(p.R + a.R, p.G + a.G, p.B + a.B);
+                    color = Color.FromRgb(p.R + a.R, p.G + a.G, p.B + a.B);
                 }
             }
             else
@@ -178,21 +180,23 @@ namespace FeynmanDiagram
             if (To.Center != From.Center)
             {
                 var w = Matrix.Scaling((To.Center - From.Center).Magnitude / Assets.EdgeSprites[EdgeType].Width, 1);// / ;
-                //var tw = 2 * w / Assets.EdgeSprites[EdgeType].Width;
-                //var h = Assets.EdgeSprites[EdgeType].Height / 2;
-                //var t2 = t * Matrix.Scaling(w, 1);
-                //var polygon = new Polygon(new[] { t * new Point(-w, -5), t * new Point(w, -5), t * new Point(w, 5), t * new Point(-w, 5) });
-                //   Draw.Polygon(polygon, Colors.Aqua);
+                                                                                                                    //var tw = 2 * w / Assets.EdgeSprites[EdgeType].Width;
+                                                                                                                    //var h = Assets.EdgeSprites[EdgeType].Height / 2;
+                                                                                                                    //var t2 = t * Matrix.Scaling(w, 1);
+                                                                                                                    //var polygon = new Polygon(new[] { t * new Point(-w, -5), t * new Point(w, -5), t * new Point(w, 5), t * new Point(-w, 5) });
+                                                                                                                    //   Draw.Polygon(polygon, Colors.Aqua);
 
                 //Draw.Primitive(PrimitiveType.TriangleStrip, Assets.EdgeSprites[EdgeType].SubImage(0).Texture, 
-                              // new (Point, Point)[] {
-                              //      (t * new Point(-w, -h), (0, 1)),
-                              //      (t * new Point(w, -h), (tw, 1)),
-                              //      (t * new Point(-w, h), (0, 0)),
-                              //      (t * new Point(w, h), (tw, 0)),
-                              //  }, color
-                              //);
+                // new (Point, Point)[] {
+                //      (t * new Point(-w, -h), (0, 1)),
+                //      (t * new Point(w, -h), (tw, 1)),
+                //      (t * new Point(-w, h), (0, 0)),
+                //      (t * new Point(w, h), (tw, 0)),
+                //  }, color
+                //);
 
+                if (_mask.ContainsPoint(ToParent((Point)Mouse.WindowLocation)))
+                    Draw.FillPolygon(_mask, Colors.Black.Transparent(0.2));
                 Draw.Sprite(Assets.EdgeSprites[EdgeType], 0, t * w, color);
             }
 
