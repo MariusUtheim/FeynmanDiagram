@@ -25,6 +25,7 @@ namespace FeynmanDiagram
 
         public string Name { get; }
         public string Symbol { get; }
+        public string ColoredSymbol => ColorCharge == ColorCharge.Neutral ? Symbol : $"{Symbol}({ColorCharge})";
         public int HiggsCoupling { get; }
         public int Charge { get; }
         public ColorCharge ColorCharge { get; }
@@ -119,16 +120,15 @@ namespace FeynmanDiagram
 		public static ParticleType AntiBottomG { get; } = BottomG._Antiparticle();
 		public static ParticleType AntiBottomB { get; } = BottomB._Antiparticle();
 
-        public int CompareTo(ParticleType other) => this.Name.CompareTo(other.Name);
-
-
         public static ParticleType Photon { get; } = new ParticleType(ParticleClass.ZPhoton, "Photon", "γ", 0, 0, ColorCharge.Neutral);
         public static ParticleType Gluon { get; } = new ParticleType(ParticleClass.Gluon, "Gluon", "g", 0, 0, ColorCharge.Neutral);
 
-        public static ParticleType WPlus { get; } = new ParticleType(ParticleClass.WBoson, "W+", "W+", 2, 1, ColorCharge.Neutral);
-        public static ParticleType WMinus { get; } = WPlus._Antiparticle("W-");
+        public static ParticleType WPlus { get; } = new ParticleType(ParticleClass.WBoson, "W", "W", 2, 1, ColorCharge.Neutral);
+        public static ParticleType WMinus { get; } = WPlus._Antiparticle("W");
 
         public static ParticleType Higgs { get; } = new ParticleType(ParticleClass.Higgs, "Higgs", "H", 2, 0, ColorCharge.Neutral);
+
+        public int CompareTo(ParticleType other) => this.ColoredSymbol.CompareTo(other.ColoredSymbol);
 
         public override string ToString()
         {
@@ -158,11 +158,11 @@ namespace FeynmanDiagram
             {
                 case ColorCharge.Neutral: return Color.FromRgb(0, 0, 0);
                 case ColorCharge.R: return Color.FromRgb(255, 0, 0);
-                case ColorCharge.G: return Color.FromRgb(0, 255, 0);
+                case ColorCharge.G: return Colors.ForestGreen;
                 case ColorCharge.B: return Color.FromRgb(0, 0, 255);
                 case ColorCharge.r: return Color.FromRgb(0, 255, 255);
                 case ColorCharge.g: return Color.FromRgb(255, 0, 255);
-                case ColorCharge.b: return Color.FromRgb(255, 255, 0);
+                case ColorCharge.b: return Colors.DarkGoldenrod;
                 default: return Color.FromRgb(0, 0, 0);
             }
         }
@@ -170,5 +170,6 @@ namespace FeynmanDiagram
 
         public static bool IsFermion(this ParticleClass particleClass)
             => particleClass == ParticleClass.Lepton || particleClass == ParticleClass.Quark;
+        
     }
 }

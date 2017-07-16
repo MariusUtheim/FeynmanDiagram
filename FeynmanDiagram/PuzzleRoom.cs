@@ -26,7 +26,7 @@ namespace FeynmanDiagram
             _name = name;
             _minOrder = minOrder;
 
-            _task = $"{String.Join(" + ", input.Select(p => p.Symbol))} -> {String.Join(" + ", output.Select(p => p.Symbol))}";
+            _task = $"{String.Join(" + ", input.Select(p => p.ColoredSymbol))} -> {String.Join(" + ", output.Select(p => p.ColoredSymbol))}";
             _input = input.OrderBy(p => p).ToList();
             _output = output.OrderBy(p => p).ToList();
 
@@ -73,7 +73,7 @@ namespace FeynmanDiagram
         {
             var (i, o) = _element.GetEquation();
 
-            if (_nextLevelAlarm == null && DraggableNode.DragNode == null && _element.IsValid && _input.SequenceEqual(i) && _output.SequenceEqual(o) && _element.GetOrder() >= _minOrder)
+            if (_nextLevelAlarm == null && DraggableNode.DragNode == null && _input.SequenceEqual(i) && _output.SequenceEqual(o) && _element.IsValid && _element.IsConnected)
             {
                 Window.Title = "Clear";
                 _color = Colors.LightGoldenrodYellow;

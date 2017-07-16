@@ -79,11 +79,36 @@ namespace FeynmanDiagram
         {
             get
             {
-#warning Also make sure it is connected
-                return Root.Children.OfType<Vertex>().All(v => v.IsValid);
+                return Root.Children.OfType<Vertex>().Any(v => v.Edges.Count() >= 3)
+                    && Root.Children.OfType<Vertex>().All(v => v.IsValid);
             }
         }
 
+        public bool IsConnected
+        {
+            get
+            {
+                if (!Root.Children.OfType<Vertex>().Any())
+                    return true;
+                var connectedSet = new HashSet<Vertex>();
 
+                var queue = new Queue<Vertex>();
+                queue.Enqueue(Root.Children.OfType<Vertex>().First());
+
+                while (queue.Any())
+                {
+                    var v = queue.Dequeue();
+
+                    if (connectedSet.Contains(v))
+                        continue;
+
+                    connectedSet.Add(v);
+                    foreach (var e in v.Edges)
+                        queue.Enqueue(e.OtherEnd(v));
+                }
+
+                return !Root.Children.OfType<Vertex>().Where(v => v.Edges.Any() && !connectedSet.Contains(v)).Any();
+            }
+        }
     }
 }
