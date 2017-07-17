@@ -26,7 +26,7 @@ namespace FeynmanDiagram
             _name = name;
             _minOrder = minOrder;
 
-            _task = $"{String.Join(" + ", input.Select(p => p.ColoredSymbol))} -> {String.Join(" + ", output.Select(p => p.ColoredSymbol))}";
+            _task = $"{String.Join(" + ", input.Select(p => p.ColoredSymbol))} → {String.Join(" + ", output.Select(p => p.ColoredSymbol))}";
             _input = input.OrderBy(p => p).ToList();
             _output = output.OrderBy(p => p).ToList();
 
@@ -95,6 +95,20 @@ namespace FeynmanDiagram
 
         public static PuzzleRoom[] Puzzles = new[] {
 
+              new PuzzleRoom("Higgs on a photon-photon background", 0,
+                           new[] { ParticleType.Higgs },
+                           new[] { ParticleType.Photon, ParticleType.Photon },
+                           new Tool[][] {
+                               basicTools,
+                               new[] { Tool.Electron, Tool.Muon },
+                               new[] { Tool.ENeutrino, Tool.MNeutrino },
+                               new[] { Tool.Up(R), Tool.Up(G), Tool.Up(B) },
+                               new[] { Tool.Down(R), Tool.Down(G), Tool.Down(B) },
+                               new[] { Tool.Top(R), Tool.Top(G), Tool.Top(B) },
+                               new[] { Tool.Bottom(R), Tool.Bottom(G), Tool.Bottom(B) },
+                               new[] { Tool.Photon, Tool.Gluon, Tool.WBoson },
+                               new[] { Tool.Higgs }
+                           }),
 
             // Electrons
             new PuzzleRoom("Electron scattering", 0,
@@ -376,21 +390,7 @@ namespace FeynmanDiagram
                            }),
 
 
-            new PuzzleRoom("Higgs on a photon-photon background", 0,
-                           new[] { ParticleType.Higgs },
-                           new[] { ParticleType.Photon, ParticleType.Photon },
-                           new Tool[][] {
-                               basicTools,
-                               new[] { Tool.Electron, Tool.Muon },
-                               new[] { Tool.ENeutrino, Tool.MNeutrino },
-                               new[] { Tool.Up(R), Tool.Up(G), Tool.Up(B) },
-                               new[] { Tool.Down(R), Tool.Down(G), Tool.Down(B) },
-                               new[] { Tool.Top(R), Tool.Top(G), Tool.Top(B) },
-                               new[] { Tool.Bottom(R), Tool.Bottom(G), Tool.Bottom(B) },
-                               new[] { Tool.Photon, Tool.Gluon, Tool.WBoson },
-                               new[] { Tool.Higgs }
-                           }),
-
+          
         };
 
 

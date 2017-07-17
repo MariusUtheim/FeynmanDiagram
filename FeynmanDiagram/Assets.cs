@@ -9,7 +9,7 @@ namespace FeynmanDiagram
 {
     public static class Assets
 	{
-	    public static readonly ISet<char> ParticleSymbols = new HashSet<char>("RGBrgb() eµνudtbγZgW+-H*->".ToCharArray());
+	    public static readonly ISet<char> ParticleSymbols = new HashSet<char>("RGBrgb() eµνudtbγZgW+-H*→".ToCharArray());
 
         public static Font ToolbarFont { get; private set; }
 
