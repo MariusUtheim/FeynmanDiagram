@@ -156,14 +156,14 @@ namespace FeynmanDiagram
         {
             switch (charge)
             {
-                case ColorCharge.Neutral: return Color.FromRgb(0, 0, 0);
+                case ColorCharge.Neutral: return Colors.Black;
                 case ColorCharge.R: return Color.FromRgb(255, 0, 0);
                 case ColorCharge.G: return Colors.ForestGreen;
                 case ColorCharge.B: return Color.FromRgb(0, 0, 255);
                 case ColorCharge.r: return Color.FromRgb(0, 255, 255);
                 case ColorCharge.g: return Color.FromRgb(255, 0, 255);
                 case ColorCharge.b: return Colors.DarkGoldenrod;
-                default: return Color.FromRgb(0, 0, 0);
+                default: return Colors.Black;
             }
         }
 

@@ -72,9 +72,9 @@ namespace FeynmanDiagram
                     if (_tools[x, y] == null)
                         continue;
                     var region = targetRegion + new Vector(width * y, height * x);
-                    Draw.Sprite(Assets.ToolBackgroundSprite, (x, y).Equals(_activeTool) ? 2 : (x, y).Equals(idx) ? 1 : 0, region.TopLeft);  
-                    Draw.Text(_tools[x, y].Text, Assets.ToolbarFont, FontAlignment.Center, region.Center, _tools[x, y].Color);
-                    Draw.Text(_tools[x, y].Hotkey.ToString(), Assets.ToolbarFont, FontAlignment.BottomRight, region.BottomRight, Colors.Black);
+                    Draw.Sprite(Assets.ToolBackgroundSprite, (x, y).Equals(_activeTool) ? 2 : (x, y).Equals(idx) ? 1 : 0, region.TopLeft);
+                    _tools[x, y].DrawTo(region);
+                    //Draw.Text(_tools[x, y].Hotkey.ToString(), Assets.ToolbarFont, FontAlignment.BottomRight, region.BottomRight, Colors.Black);
                 }
         }
 

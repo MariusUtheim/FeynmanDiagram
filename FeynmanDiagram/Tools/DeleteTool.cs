@@ -22,5 +22,10 @@ namespace FeynmanDiagram.Tools
         public override Color Color => Colors.Red;
 
         public override string Text => "Delete";
+
+        public override void DrawTo(Rectangle region)
+        {
+            Draw.Sprite(Assets.DeleteSprite, 0, Matrix.Scaling(0.3, 0.3).Translate(region.Center.X, region.Center.Y));
+        }
     }
 }

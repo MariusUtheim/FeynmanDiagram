@@ -24,6 +24,9 @@ namespace FeynmanDiagram
 
         public static Sprite ToolBackgroundSprite { get; private set; }
 
+        public static Sprite PointerSprite { get; private set; }
+        public static Sprite DeleteSprite { get; private set; }
+
         public static Dictionary<ParticleClass, Sprite> EdgeSprites { get; private set; }
 
 
@@ -33,9 +36,11 @@ namespace FeynmanDiagram
             EdgeLabelFont = Font.LoadTrueTypeFromFile("Assets/cambriai.ttf", 18, ParticleSymbols);
             VertexLabelFont = Font.LoadTrueTypeFromFile("Assets/cambriai.ttf", 32, ParticleSymbols);
             TaskFont = Font.LoadTrueTypeFromFile("Assets/cambriai.ttf", 36, ParticleSymbols);
-
+            
             TutorialTextRenderer = new TextRenderer(ToolbarFont, FontAlignment.TopLeft, 900);
 
+            PointerSprite = Sprite.Load("Assets/Pointer.png");
+            DeleteSprite = Sprite.Load("Assets/Delete.png");
             FermionArrowheadSprite = Sprite.Load("Assets/FermionArrowhead.png");
 
             ToolBackgroundSprite = Sprite.Load("Assets/ToolBackground.png", imageCount: 3, origin: (0, 0));

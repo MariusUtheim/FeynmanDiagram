@@ -13,5 +13,10 @@ namespace FeynmanDiagram.Tools
         public override Color Color => Colors.Black;
 
         public override string Text => "Pointer";
+
+        public override void DrawTo(Rectangle region)
+        {
+            Draw.Sprite(Assets.PointerSprite, 0, Matrix.Scaling(0.25, 0.25).Translate(region.Center.X, region.Center.Y));
+        }
     }
 }

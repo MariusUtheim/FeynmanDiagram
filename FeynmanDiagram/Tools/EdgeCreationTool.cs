@@ -1,5 +1,6 @@
 ﻿using System;
 using GRaff;
+using GRaff.Graphics.Text;
 
 namespace FeynmanDiagram.Tools
 {
@@ -31,6 +32,11 @@ namespace FeynmanDiagram.Tools
 		{
 			edge.Branch(Type);
 		}
+
+        public override void DrawTo(Rectangle region)
+        {
+            Draw.Text(Type.Symbol, Assets.TaskFont, FontAlignment.Center, region.Center - new Vector(0, 8), Color);
+        }
 
         public ParticleType Type { get; }
 

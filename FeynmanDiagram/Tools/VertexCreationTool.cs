@@ -21,6 +21,11 @@ namespace FeynmanDiagram.Tools
 
 		public override Color Color => Colors.Black;
 
-		public override string Text => "Vertex";
+        public override void DrawTo(Rectangle region)
+        {
+            Draw.FillCircle(region.Center, FeynmanDiagram.Vertex.Radius, Colors.Black, Colors.Black.Transparent(0));
+        }
+
+        public override string Text => "Vertex";
     }
 }
