@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using GRaff;
 using GRaff.Graphics;
 using GRaff.Graphics.Text;
+using GRaff.Effects;
 
 namespace FeynmanDiagram
 {
@@ -57,54 +58,35 @@ namespace FeynmanDiagram
             };
         }
 
+        private const double Thickness = 5.0;
+        private static Sprite _generateSprite(IntVector size, Func<double, double> wave, double waveNumber)
+        {
+            var data = new Color[size.Y, size.X];
+            for (var x = 0; x < size.X; x++)
+            {
+                var y0 = (size.Y / 2.0 + 0.5 * (size.Y - Thickness - 1) * wave(x * waveNumber / size.X));
+                for (int y = 0; y < size.Y; y++)
+                    data[y, x] = Colors.White.Transparent(GMath.Exp(-GMath.Sqr(y - y0)));
+            }
+
+            var texture = new Texture(data);
+            return new Sprite(texture.SubTexture());
+        }
+
 
         private static Sprite _genPhotonSprite()
         {
-            int w = 155, h = 25;
-            var sineData = new Color[h + 1, w];
-            for (int x = 0; x < w; x++)
-            {
-                for (int y = 0; y < h; y++)
-                    sineData[y, x] = Colors.White.Transparent(1 - GMath.Abs(y - h / 2 + (h / 2 - 1) * GMath.Sin(2 * x * GMath.Tau / w)) / 2.0);
-            }
-            var sineTexture = new Texture(sineData);
-
-            return new Sprite(sineTexture.SubTexture());
+            return _generateSprite((600, 35), WaveGenerator.Sine(1), 2);
         }
 
         private static Sprite _genWBosonSprite()
         {
-            var h = 25;
-            var dx = h - 3;
-            var w = dx * 9;
-            var wData = new Color[h + 1, w];
-            for (var x = 0; x < w; x++)
-            {
-                var y0 = GMath.Abs(GMath.Remainder(x + dx/2, 2 * dx) - dx) + 1;
-                for (var y = 0; y < h; y++)
-                    wData[y, x] = Colors.White.Transparent(GMath.Exp(-GMath.Sqr(y - y0)));
-            }
-            var wTexture = new Texture(wData);
-
-            return new Sprite(wTexture.SubTexture());
+            return _generateSprite((300, 30), WaveGenerator.Triangle(1), 5);
         }
 
         private static Sprite _genHiggsSprite()
         {
-            var h = 15;
-            var dx = 15;
-            var w = dx * 15;
-            var wData = new Color[h + 1, w];
-            for (var x = 0; x < w; x++)
-            {
-                if (x % (2 * dx) >= dx)
-                    continue;
-                for (var y = 0; y < h; y++)
-                    wData[y, x] = Colors.White.Transparent(GMath.Exp(-GMath.Sqr(4 * (y - h/2))));
-            }
-            var wTexture = new Texture(wData);
-
-            return new Sprite(wTexture.SubTexture());
+            return _generateSprite((300, 10), WaveGenerator.Binary(1, 100), 10);
         }
     }
 }
